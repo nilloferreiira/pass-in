@@ -11,8 +11,41 @@ import { Table } from "./table/Table";
 import { TableHeader } from "./table/table-header";
 import { TableCell } from "./table/table-cell";
 import { TableRow } from "./table/table-row";
+import { attendees } from "../data/attendees";
+import dayjs from "dayjs";
+import "dayjs/locale/pt-br";
+import relativeTime from "dayjs/plugin/relativeTime";
+import { ChangeEvent, useState } from "react";
+
+dayjs.extend(relativeTime);
+dayjs.locale("pt-br");
 
 export function AttendeeList() {
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+
+  const totalPages = Math.ceil(attendees.length / 10)
+
+  function handleSearchChange(event: ChangeEvent<HTMLInputElement>) {
+    setSearch(event.target.value);
+  }
+
+  function goToNextPage() {
+    setPage((state) => state + 1);
+  }
+
+  function goToPrevPage() {
+    setPage((state) => state - 1);
+  }
+
+  function goToFirstPage() {
+    setPage(1);
+  }
+
+  function goToLastPage() {
+    setPage(totalPages);
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex gap-5 items-center">
@@ -22,9 +55,11 @@ export function AttendeeList() {
           <input
             type="text"
             placeholder="Buscar participante..."
-            className="bg-transparent flex-1 outline-none h-auto border-0 p-0 text-sm"
+            onChange={handleSearchChange}
+            className="bg-transparent flex-1 outline-none h-auto border-0 p-0 text-sm "
           />
         </div>
+        {search}
       </div>
 
       {/* TABLE  */}
@@ -37,7 +72,7 @@ export function AttendeeList() {
             >
               <input
                 type="checkbox"
-                className="size-4 bg-black/20 rounded border border-white/10"
+                className="size-4 bg-black/20 rounded border border-white/10 text-orange-400 ring-orange-300"
               />
             </TableHeader>
             <TableHeader className="py-3 px-4 text-sm font-semibold text-left">
@@ -60,30 +95,29 @@ export function AttendeeList() {
           </TableRow>
         </thead>
         <tbody>
-          {Array.from({ length: 8 }).map((_, i) => {
+          {attendees.slice((page - 1) * 10, page * 10).map((attendee) => {
             return (
-              <TableRow key={i} className="border-b border-white/10 hover:bg-white/5">
+              <TableRow
+                key={attendee.id}
+                className="border-b border-white/10 hover:bg-white/5"
+              >
                 <TableCell>
                   <input
                     type="checkbox"
-                    className="size-4 bg-black/20 rounded border border-white/10"
+                    className="size-4 bg-black/20 rounded border border-white/10 text-orange-400"
                   />
                 </TableCell>
-                <TableCell>123546</TableCell>
+                <TableCell>{attendee.id}</TableCell>
                 <TableCell>
                   <div className="flex flex-col gap-1">
                     <span className="font-semibold text-white">
-                      Danillo Ferreira
+                      {attendee.name}
                     </span>
-                    <span>danillo.ferreira@gmail.com</span>
+                    <span>{attendee.email}</span>
                   </div>
                 </TableCell>
-                <TableCell>
-                  7 dias atrás
-                </TableCell>
-                <TableCell>
-                  7 dias atrás
-                </TableCell>
+                <TableCell>{dayjs().to(attendee.createdAt)}</TableCell>
+                <TableCell>{dayjs().to(attendee.checkedIn)}</TableCell>
                 <TableCell>
                   <IconButton transparent>
                     <MoreHorizontal className="size-4" />
@@ -96,31 +130,42 @@ export function AttendeeList() {
         <tfoot>
           <TableRow>
             <TableCell colSpan={3}>
-              Mostrando 10 de 220 items
+              Mostrando 10 de {attendees.length} items
             </TableCell>
-            <TableCell 
-              colSpan={3}
-              className="text-right"
-            >
+            <TableCell colSpan={3} className="text-right">
               <div className="inline-flex gap-8">
-                <span>Página 1 de 23</span>
+                <span>
+                  Página {page} de {totalPages}
+                </span>
 
                 <div className="flex gap-1.5">
-                  <IconButton>
+                  <IconButton
+                    onClick={goToFirstPage}
+                    disabled={page === 1}
+                  >
                     <ChevronsLeft className="size-4" />
                   </IconButton>
-                  <IconButton>
+                  <IconButton
+                    onClick={goToPrevPage}
+                    disabled={page === 1}
+                  >
                     <ChevronLeft className="size-4" />
                   </IconButton>
-                  <IconButton>
+                  <IconButton
+                    onClick={goToNextPage}
+                    disabled={page === totalPages}
+                  >
                     <ChevronRight className="size-4" />
                   </IconButton>
-                  <IconButton>
+                  <IconButton
+                    onClick={goToLastPage}
+                    disabled={page === totalPages}
+                  >
                     <ChevronsRight className="size-4" />
                   </IconButton>
                 </div>
               </div>
-            </TableCell >
+            </TableCell>
           </TableRow>
         </tfoot>
       </Table>
