@@ -50,7 +50,7 @@ export function AttendeeList() {
   const [attendees, setAttendees] = useState<Attendee[]>([]);
   const [total, setTotal] = useState<number>(0);
 
-  const eventId = 'e4ee98f9-3cee-4337-8270-3faa2760f5ca'
+  const eventId = '294aa6d3-00ff-4fee-a418-83356cb7885f'
 
   useEffect(() => {
     const url = new URL(
