@@ -6,8 +6,6 @@ Pass In é um dashboard desenvolvido para gerenciar os participantes de um event
 
 Este projeto foi feito em react desenvolvido durante o evento NLW Unite, organizado pela Rocketseat.
 
-Aqui está a seção "Como Utilizar" completa, mesclando os novos pontos com os anteriores de forma organizada:
-
 ---
 
 ## Funcionalidades Principais
