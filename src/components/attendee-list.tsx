@@ -50,9 +50,11 @@ export function AttendeeList() {
   const [attendees, setAttendees] = useState<Attendee[]>([]);
   const [total, setTotal] = useState<number>(0);
 
+  const eventId = 'e4ee98f9-3cee-4337-8270-3faa2760f5ca'
+
   useEffect(() => {
     const url = new URL(
-      "http://localhost:3333/events/e4ee98f9-3cee-4337-8270-3faa2760f5ca/attendees"
+      `http://localhost:3333/events/${eventId}/attendees`
     );
 
     url.searchParams.set("pageIndex", String(page - 1));
