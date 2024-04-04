@@ -65,7 +65,7 @@ Depois de clonar o repositório e configurar a API, você pode iniciar o servido
 ```
 cd pass-in
 npm install
-npm start
+npm run dev
 ```
 
 ### 5. Acessando a Aplicação
